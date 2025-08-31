@@ -36,6 +36,53 @@ If you are using Bank of Anthos, please ★Star this repository to show your int
 | [accounts-db](/src/accounts/accounts-db)               | PostgreSQL    | Database for user accounts and associated data. Option to pre-populate with demo users.                                                      |
 | [loadgenerator](/src/loadgenerator)                    | Python/Locust | Continuously sends requests imitating users to the frontend. Periodically creates new accounts and simulates transactions between them.      |
 
+## Links to API Documentation
+
+1. [Contacts](src/accounts/contacts/README.md)
+2. [User Service](src/accounts/userservice/README.md)
+3. [Balance Reader](src/ledger/balancereader/README.md)
+4. [Ledger Writer](src/ledger/ledgerwriter/README.md)
+5. [Transaction History](src/ledger/transactionhistory/README.md)
+6. [Ledger Monolith](src/ledgermonolith/README.md)
+
+## Database Documentation
+
+1. [Accounts Database](src/accounts/accounts-db/README.md)
+2. [Ledger Database](src/ledger/ledger-db/README.md)
+
+## External API Access
+
+For development and testing purposes, you can expose the backend APIs externally:
+
+### Quick Start
+```bash
+# Enable external API access
+./external-api-setup.sh
+
+# Check service status  
+kubectl get services
+
+# Disable external API access
+./cleanup-external-apis.sh
+```
+
+### Documentation
+- **[External API Access Guide](EXTERNAL-API-ACCESS.md)** - Complete setup and usage guide
+- **[API Ingress Setup](API-INGRESS.md)** - Alternative ingress-based approach
+
+### What it does
+- Converts API services from `ClusterIP` to `LoadBalancer` type
+- Provides external IP addresses for direct API testing
+- Frontend web application continues to work normally (uses internal service names)
+- Easy to enable/disable for cost management
+
+### API Services Exposed
+- **User Service** (port 8080) - Authentication and user management
+- **Contacts** (port 8080) - User contacts management  
+- **Balance Reader** (port 8080) - Account balance queries
+- **Ledger Writer** (port 8080) - Transaction submissions
+- **Transaction History** (port 8080) - Transaction history queries
+
 ## Interactive quickstart (GKE)
 
 The following button opens up an interactive tutorial showing how to deploy Bank of Anthos in GKE:
@@ -111,14 +158,31 @@ The following button opens up an interactive tutorial showing how to deploy Bank
 
    Visit `http://EXTERNAL_IP` in a web browser to access your instance of Bank of Anthos.
 
-8. Once you are done with it, delete the GKE cluster.
+8. (Optional) Expose backend APIs externally
 
    ```sh
-   gcloud container clusters delete bank-of-anthos \
-     --project=${PROJECT_ID} --region=${REGION}
+   # Enable external API access
+   ./external-api-setup.sh
+
+   # Check service status  
+   kubectl get services
    ```
 
-   Deleting the cluster may take a few minutes.
+   The URL should be of the format `http://EXTERNAL_IP:8080`
+
+9. (Optional) Cleanup external IPs once done using backend APIs
+   
+   ```sh
+   # Disable external API access
+   ./cleanup-external-apis.sh
+   ```
+
+10. Once you are done with it, delete the GKE cluster.
+    ```sh
+    gcloud container clusters delete bank-of-anthos \
+      --project=${PROJECT_ID} --region=${REGION}
+    ```
+    Deleting the cluster may take a few minutes.
 
 ## Additional deployment options
 
