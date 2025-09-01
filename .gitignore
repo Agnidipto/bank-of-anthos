@@ -14,6 +14,7 @@ target/
 settings.json
 pyvenv.cfg
 api-doc.txt
+.agent_env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
